@@ -53,49 +53,15 @@ group by 1
 '''
 
 # execute command to create a new table
-# log any exceptions as an error
 
 try:
     cur.execute(create_table)
     logger.info('Successfully executed CREATE TABLE AS command')
-except Exception as e: 
-    logger.error(e)
-    cur.close()
 
 # make the changes to the database persistent
-# log any exceptions as an error
-# and close communication with the database
-
-try:
     rs.commit()
     logger.info('Successfully committed changes to the database')
-except Exception as e: 
-    logger.error(e)
+
+finally:
     cur.close()
     rs.close()
-
-# verify the changes persisted
-# log any exceptions as an error
-# and close communication with the database
-
-
-query = '''
-select *
-from build_summary_table
-order by total_connections asc
-'''
-
-try:
-    cur.execute(query)
-#     resultdata = cur.fetchall()
-#     pp.pprint(resultdata)
-    logger.info('Successfully queried the newly created table from the database')
-except Exception as e:
-    logger.error(e)
-    cur.close()
-    rs.close()
-
-# close communication with the database
-
-cur.close()
-rs.close()
