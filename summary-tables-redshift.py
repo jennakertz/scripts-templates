@@ -19,7 +19,7 @@ create or replace view build_summary_table as (
 with a as (
 select
 cid as primary_key
-from platform.rjm_clients
+from schema_a.table_a
 limit 100
 )
 ,
@@ -27,8 +27,8 @@ limit 100
 b as (
 select 
 client_id as foreign_key, 
-count(*) as total_connections 
-from connection_service.connections 
+count(*) as total
+from schema_b.table_b
 group by 1 
 order by 2 desc
 )
@@ -37,14 +37,14 @@ order by 2 desc
 c as (
 select
 a.*,
-nvl(b.total_connections,0) as total_connections
+nvl(b.total,0) as total
 from a
 left join b
 on a.primary_key = b.foreign_key
 )
 
 select
-total_connections,
+total,
 count(*)
 from c
 group by 1
