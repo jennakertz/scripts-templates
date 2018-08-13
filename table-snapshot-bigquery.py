@@ -81,12 +81,10 @@ logger.info("Table {} now contains {} columns.".format(table_id, len(table.schem
 
 # look at the new timestamps
 
-import pandas
-bq = connections['Default Warehouse']['client']
 sql = """
     select distinct created_at
     from snapshots_dataset.shakespeare_daily
     limit 10
 """
 
-bq.query(sql).to_dataframe()
+client.query(sql).to_dataframe()
