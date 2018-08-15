@@ -6,8 +6,8 @@ import pandas
 
 logger = logging.getLogger()
 
-rs = connections['Default Warehouse']['client']
-cur = rs.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+conn = connections['Default Warehouse']['client']
+cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 # build command to create a new table
 # use CREATE OR REPLACE VIEW name AS in order to avoid conflicts when trying to replace data
@@ -59,9 +59,9 @@ try:
     logger.info('Successfully executed CREATE TABLE AS command')
 
 # make the changes to the database persistent
-    rs.commit()
+    conn.commit()
     logger.info('Successfully committed changes to the database')
 
 finally:
     cur.close()
-    rs.close()
+    conn.close()

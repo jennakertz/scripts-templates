@@ -6,8 +6,8 @@ pp.pprint(connections)
 
 # build transformation query
 
-cnx = connections['Default Warehouse']['client']
-cur = cnx.cursor()
+conn = connections['Default Warehouse']['client']
+cur = conn.cursor()
 
 try:
     sql = cur.execute("CREATE OR REPLACE TABLE chicken.burger.daily_14_agg AS SELECT count(*) as total FROM snowflake_sample_data.weather.daily_14_total")

@@ -6,8 +6,8 @@ import pandas
 
 logger = logging.getLogger()
 
-rs = connections['Default Warehouse']['client']
-cur = rs.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+conn = connections['Default Warehouse']['client']
+cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
 # replace these variables
 
@@ -18,42 +18,31 @@ sort_key = 'id'
 stitch_user = 'stitch_user'
 
 # set search path
-search_path = cur.execute("set search_path to %s" %schema)
+search_path = cur.execute("set search_path to {}".format(schema))
 
 # get table definition
-sql = cur.execute("select a.column, a.type from pg_table_def a where schemaname = '%s' and tablename = '%s'" % (schema,table))
-result = cur.fetchall()
 
-# print(len(result))
-i = 0
-columns = ''
-
-for row in result:
-    i = i + 1
-    
-    if i == len(result):
-        columns = columns + ' ' + row['column'] + ' ' + row['type']
-    else:
-        columns = columns + ' ' + row['column'] + ' ' + row['type'] + ','
+cur.execute("select a.column, a.type from pg_table_def a where schemaname = '{}' and tablename = '{}'".format(schema,table))
+columns = ', '.join(['{} {}'.format(row['column'], row['type']) for row in cur])
         
 # get table comment (primary key def)
 
-sql = cur.execute("select description from pg_catalog.pg_description where objoid = (select oid from pg_class where relname = '%s' and relnamespace = (select oid from pg_catalog.pg_namespace where nspname = '%s'))"%(table,schema))
+sql = cur.execute("select description from pg_catalog.pg_description where objoid = (select oid from pg_class where relname = '{}' and relnamespace = (select oid from pg_catalog.pg_namespace where nspname = '{}'))".format(table,schema))
 
 rec = cur.fetchone()
 
 primary_key = rec['description']
 
 try:
-    alter_table = cur.execute("alter table %s rename to old_%s" %(table, table))
-    create_table = cur.execute("create table new_%s (%s) distkey (%s) sortkey (%s)" %(table, columns, dist_key, sort_key))
-    insert = cur.execute("insert into new_%s (select * from old_%s)" %(table, table))
-    comment = cur.execute("comment on table new_%s is '%s'" %(table, primary_key))
+    alter_table = cur.execute("alter table {} rename to old_{}".format(table, table))
+    create_table = cur.execute("create table new_{} ({}) distkey ({}) sortkey ({})".format(table, columns, dist_key, sort_key))
+    insert = cur.execute("insert into new_{} (select * from old_{})".format(table, table))
+    comment = cur.execute("comment on table new_{} is '{}'".format(table, primary_key))
     
-    rename = cur.execute("alter table new_%s rename to %s" %(table, table))
-    grant = cur.execute("alter table %s owner to %s" %(table, stitch_user))
-    drop = cur.execute("drop table old_%s" %(table))
-
+    rename = cur.execute("alter table new_{} rename to {}".format(table, table))
+    grant = cur.execute("alter table {} owner to {}".format(table, stitch_user))
+    drop = cur.execute("drop table old_{}".format(table))
+    
 finally:
     cur.close()
-    rs.close()
+    conn.close()

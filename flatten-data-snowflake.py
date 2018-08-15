@@ -9,8 +9,8 @@ from pandas import DataFrame
 from collections import OrderedDict
 from datetime import date
 
-cnx = connections['Default Warehouse']['client']
-cur = cnx.cursor()
+conn = connections['Default Warehouse']['client']
+cur = conn.cursor()
 
 # replace these variables
 
@@ -28,8 +28,8 @@ try:
 #     note: you may specify optional arguments to the FLATTEN function to specify how the data is flattened
 #     see: https://docs.snowflake.net/manuals/sql-reference/functions/flatten.html
     
-    sql = cur.execute("select distinct key from %s.%s, lateral flatten(input => parse_json(%s)) f;" % (source_schema,source_table,source_variant_field))
-    result = sql.fetchall()
+    cur.execute("select distinct key from {}.{}, lateral flatten(input => parse_json({})) f;".format(source_schema,source_table,source_variant_field))
+    result = cur.fetchall()
     
 #     create a separate table for all keys included in the source variant field
 
@@ -42,12 +42,11 @@ try:
 #         THIS:    The element being flattened (useful in recursive flattening).
     
     for row in result:
-        
+
         key = row[0]
-        sql = cur.execute("create or replace table %s.%s__%s as select id as source_key_id, seq, path, index, value, this from chicken.trel.trello_cards, lateral flatten(input => parse_json(badges)) f where key = '%s';" % (dest_schema,source_table,key,key))
+        sql = cur.execute("create or replace table {}.{}__{} as select id as source_key_id, seq, path, index, value, this from chicken.trel.trello_cards, lateral flatten(input => parse_json(badges)) f where key = '{}';".format(dest_schema,source_table,key,key))
         
-        logger.info('Successfully created %s.%s__%s table.' % (dest_schema,source_table,key))
-#         print(sql)
+        logger.info('Successfully created {}.{}__{} table.'.format(dest_schema,source_table,key))
     
 except Exception as e:
     logger.error(e)

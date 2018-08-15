@@ -7,34 +7,34 @@ import logging
 logger = logging.getLogger()
 
 from google.cloud import bigquery
-client = connections['Default Warehouse']['client']
+conn = connections['Default Warehouse']['client']
 
 # # DO ONLY ONCE
 # # create a new dataset for your daily snapshots
 
-# dataset_ref = client.dataset('snapshots_dataset')
+# dataset_ref = conn.dataset('snapshots_dataset')
 
 # dataset = bigquery.Dataset(dataset_ref)
 # dataset.location = 'US'
-# client.create_dataset(dataset)
+# conn.create_dataset(dataset)
 
 # # DO ONLY ONCE
 # # create a new table
 
 # table_ref = dataset_ref.table('shakespeare_daily')
 # table = bigquery.Table(table_ref)
-# table = client.create_table(table)  # API request
+# table = conn.create_table(table)  # API request
 
 # assert table.table_id == 'shakespeare_daily'
 
 # get info on destination dataset
 
-dataset_ref = client.dataset('snapshots_dataset')
+dataset_ref = conn.dataset('snapshots_dataset')
 
 # Retrieves the destination table and checks the length of the schema
 table_id = 'shakespeare_daily'
 table_ref = dataset_ref.table(table_id)
-table = client.get_table(table_ref)
+table = conn.get_table(table_ref)
 
 print("Table {} contains {} columns.".format(table_id, len(table.schema)))
 logger.info("Table {} contains {} columns.".format(table_id, len(table.schema)))
@@ -52,7 +52,7 @@ try:
 except Exception as e:
     logger.error(e)
 
-query_job = client.query(
+query_job = conn.query(
     
 #     select everything from your source dataset
 #     and add a created_at column with the current timestamp
@@ -74,7 +74,7 @@ except Exception as e:
 
 # check the updated length of the schema
 
-table = client.get_table(table)
+table = conn.get_table(table)
 
 print("Table {} now contains {} columns.".format(table_id, len(table.schema)))
 logger.info("Table {} now contains {} columns.".format(table_id, len(table.schema)))
@@ -87,4 +87,4 @@ sql = """
     limit 10
 """
 
-client.query(sql).to_dataframe()
+conn.query(sql).to_dataframe()
