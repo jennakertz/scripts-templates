@@ -73,7 +73,7 @@ field_values = ["('{}', '{}', '{}', '{}', '{}', '{}')".format(element['email'], 
 
 # define the path of the table you want to create
 
-table_path = 'chicken.burger.scripts_api_response'
+table_path = 'database.schema.table'
 
 # run ONCE
 
