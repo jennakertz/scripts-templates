@@ -64,10 +64,14 @@ for field in field_diff_proper:
     
     if len([x[field] for x in results if x[field] is not None]) > 0:
         missing_field_report.append(field)
+        records = []
+        record_ids = [x['Id'] for x in results if x[field] is not None]
+        records.append(record_ids)
+        missing_field_report.append({'field':field, 'records':record_ids})
     else:
         logger.info('Field `{}` does not contain any data to replicate.'.format(field))
 
 # log if there are field discrepancies
 
 if len(missing_field_report) > 0:
-    logger.info('The following fields have data in SFDC, but are missing from your warehouse: ' + missing_field_report)
+    logger.info('The following fields have data in SFDC, but are missing from your warehouse. Here are the fields and example record Ids: ' + missing_field_report)
