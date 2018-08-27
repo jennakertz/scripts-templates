@@ -51,21 +51,22 @@ pp.pprint(results)
 
 # separate the results set so you can identify which queries were successful. you may want to retry certain requests.
 
-success = []
-retry = []
-not_found = []
+from itertools import groupby
+from operator import itemgetter
+
+# sort and group results by status
+
+results.sort(key=itemgetter('status'))
+grouped_by_status = {str(key): list(group) for key, group in groupby(results, lambda el: el['status'])}
 
 
-for result in (result for result in results if result['status'] == 200):
-    success.append(result)
-for result in (result for result in results if result['status'] == 202):
-    retry.append(result)
-for result in (result for result in results if result['status'] != 202 and result['status'] != 200):
-    not_found.append(result)
+# `grouped_by_status` is  a dictionary keyed by status code where the value for each entry is a 
+# list of results with that status
 
-logger.info('success: ' + str(len(success)))
-logger.info('retry: ' + str(len(retry)))
-logger.info('not_found: ' + str(len(not_found)))
+success = grouped_by_status['200']
+
+logger.info('Count of results by status:')
+logger.info({k: len(v) for k, v in grouped_by_status.items()})
 
 # format the successful results for insertion into the data table
 
