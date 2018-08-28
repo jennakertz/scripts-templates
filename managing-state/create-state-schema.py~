@@ -16,4 +16,3 @@ state_schema = "_sdc_script_state"
 
 # cur.execute(sql)
 # conn.commit()
-# conn.close()

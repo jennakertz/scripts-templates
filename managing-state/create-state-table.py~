@@ -20,26 +20,24 @@ state_table_path = "{}._sdc_{}_state".format(state_schema, script_name)
 # CHECK YOUR WORK :-)
 
 # set search path to state schema
-set_path = 'set search_path to _sdc_script_state'
-cur.execute(set_path)
+# set_path = 'set search_path to _sdc_script_state'
+# cur.execute(set_path)
 
 # verify the search path
-check_path = 'show search_path'
-cur.execute(check_path)
-cur.fetchall()
+# check_path = 'show search_path'
+# cur.execute(check_path)
+# cur.fetchall()
 
 # verify the table structure
 
-check_structure = '''
-select "column", type
-from pg_table_def where tablename = '_sdc_{}_state';
-'''.format(script_name)
+# check_structure = '''
+# select "column", type
+#  from pg_table_def where tablename = '_sdc_salesforce_dev_state';
+# '''
 
-cur.execute(check_structure)
-results = cur.fetchall()
+# cur.execute(check_structure)
+# results = cur.fetchall()
 
-df = pd.DataFrame(results)
-df
-
-
-conn.close()
+# results
+# df = pd.DataFrame(results)
+# df
