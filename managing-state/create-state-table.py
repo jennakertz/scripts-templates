@@ -12,7 +12,7 @@ state_table_path = "{}._sdc_{}_state".format(state_schema, script_name)
 
 # RUN ONCE - create script's state table
 
-# create_state_table = "create table if not exists {} (id bigint identity(1,1), created_at datetime default sysdate, table_name varchar, state bigint, primary key(id))".format(state_table_path)
+# create_state_table = "create table if not exists {} (id bigint identity(1,1), created_at datetime default sysdate, table_name varchar, state datetime, primary key(id))".format(state_table_path)
 
 # cur.execute(create_state_table)
 # conn.commit()
