@@ -11,3 +11,16 @@ Use the following templates to get started with Scripts.
 | [Transform table](https://github.com/jennakertz/scripts-templates/blob/master/transform-table-snowflake.py) | Snowflake | Aggregate data from a given table into a new table using CREATE OR REPLACE TABLE AS. When this script is run, it will create a new table if one does not exist or replace the existing table. | 
 | [Enrich data and store results](https://github.com/jennakertz/scripts-templates/blob/master/get-results-and-store-in-table-snowflake.py) | Snowflake | Query your data warehouse to get a list of data you'd like to enrich. Use that data to query an API like Clearbit. Store the results returned from the API in a table in your destination. |
 | [Audit SFDC data's schema](https://github.com/jennakertz/scripts-templates/blob/master/audit-sfdc-fields-snowflake.py) | Snowflake | Compares an object's fields in SFDC to the columns for the object in the Snowflake data warehouse. If fields exist in SFDC but do not exist in the data warehouse, checks SFDC to see whether the missing fields contain data. If the missing fields contain data in SFDC, reports the problem fields along with record id examples for investigation. | 
+| [Send data to SFDC](https://github.com/jennakertz/scripts-templates/blob/master/send-data-from-postgres-to-sfdc.py) | Postgres | Create new contacts in Salesforce when new data is loaded into your warehouse. | 
+
+
+## Managing bookmarks
+
+If you’re scheduling your Scripts based on new data that’s loaded into your warehouse, you may only want to process new or updated data from the tables in your Script. These templates will help you set up a system for keeping track of what data has already been processed by the Script.
+
+
+| Name | Description |
+| --- | --- |
+| [Create a bookmark schema](https://github.com/jennakertz/scripts-templates/blob/master/managing-bookmarks/create-bookmark-schema.py) | We recommend creating a new schema in your data warehouse for your bookmark tracking tables. There will be a separate bookmark tracking table for each Script. | 
+| [Create a bookmark table](https://github.com/jennakertz/scripts-templates/blob/master/managing-bookmarks/create-bookmark-table.py) | In your bookmark schema, create a table specifically for tracking bookmarks for the tables used in this Script. The bookmark table contains a unique id, a created_at date, the schema name for the reference table, the table name of the reference table, and the maximum bookmark value processed in the last run. |
+| [Get and write bookmarks](https://github.com/jennakertz/scripts-templates/blob/master/managing-bookmarks/get-and-write-bookmarks.py) | Use these functions to retrieve bookmarks from your Script’s bookmark table and then write bookmarks back to that table. | 
