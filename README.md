@@ -14,13 +14,43 @@ Use the following templates to get started with Scripts.
 | [Send data to SFDC](https://github.com/jennakertz/scripts-templates/blob/master/send-data-from-postgres-to-sfdc.py) | Postgres | Create new contacts in Salesforce when new data is loaded into your warehouse. | 
 
 
+# Post-load scheduling
+
+## Filtering tables
+
+Scripts using post-load scheduling will recieve a variable called `event` when the Script is invoked. This variable contains the tables which were updated in your warehouse since the last time the script ran. If you want your Script to run for only specific tables, you can filter it like so:
+
+```
+import pprint as pp
+import json
+
+import logging
+logger = logging.getLogger()
+
+# dummy event variable
+event = json.loads('{"script_id": 123,"tables": {"schema_a": ["table_a","table_b"],"schema_b": ["table_a"],"schema_c": ["table_a"]}}')
+
+# RUN THIS SCRIPT ONLY FOR THE FOLLOWING SCHEMAS AND TABLES
+# FILTER ANY ADDITIONAL TABLES FROM THE `event` VARIABLE OUT OF THE SCRIPT
+
+accepted_tables = json.loads('{"schema_a":["table_b"], "schema_c":["table_c"]}')
+
+a = event['tables']
+b = accepted_tables
+
+included_tables = {k: list(set(a[k]) & set(b[k])) for k in a if k in b}
+pp.pprint(included_tables)
+
+logger.info('Running Script with the following tables: ' + str(included_tables))
+```
+
 ## Managing bookmarks
 
 If you’re scheduling your Scripts based on new data that’s loaded into your warehouse, you may only want to process new or updated data from the tables in your Script. These templates will help you set up a system for keeping track of what data has already been processed by the Script.
-
 
 | Name | Description |
 | --- | --- |
 | [Create a bookmark schema](https://github.com/jennakertz/scripts-templates/blob/master/managing-bookmarks/create-bookmark-schema.py) | We recommend creating a new schema in your data warehouse for your bookmark tracking tables. There will be a separate bookmark tracking table for each Script. | 
 | [Create a bookmark table](https://github.com/jennakertz/scripts-templates/blob/master/managing-bookmarks/create-bookmark-table.py) | In your bookmark schema, create a table specifically for tracking bookmarks for the tables used in this Script. The bookmark table contains a unique id, a created_at date, the schema name for the reference table, the table name of the reference table, and the maximum bookmark value processed in the last run. |
 | [Get and write bookmarks](https://github.com/jennakertz/scripts-templates/blob/master/managing-bookmarks/get-and-write-bookmarks.py) | Use these functions to retrieve bookmarks from your Script’s bookmark table and then write bookmarks back to that table. | 
+
