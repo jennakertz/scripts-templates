@@ -1,5 +1,10 @@
 # Scripts Templates
 
+1. [General use templates](#general-use) - A collection of templates for a variety of use cases, including modeling, auditing, and enriching data, as well as sending data to downstream applications
+2. [Post-load templates](#post-load-scheduling) - Templates designed to assist with managing bookmarks and filtering for specific tables in post-load Scripts
+
+## General use
+
 Use the following templates to get started with Scripts.
 
 | Template name | Destination type | Description |
@@ -14,9 +19,9 @@ Use the following templates to get started with Scripts.
 | [Send data to SFDC](https://github.com/jennakertz/scripts-templates/blob/master/send-data-from-postgres-to-sfdc.py) | Postgres | Create new contacts in Salesforce when new data is loaded into your warehouse. | 
 
 
-# Post-load scheduling
+## Post-load scheduling
 
-## Filtering tables
+### Filtering tables
 
 Scripts using post-load scheduling will recieve a variable called `event` when the Script is invoked. This variable contains the tables which were updated in your warehouse since the last time the script ran. If you want your Script to run for only specific tables, you can filter it like so:
 
@@ -44,7 +49,7 @@ pp.pprint(included_tables)
 logger.info('Running Script with the following tables: ' + str(included_tables))
 ```
 
-## Managing bookmarks
+### Managing bookmarks
 
 If you’re scheduling your Scripts based on new data that’s loaded into your warehouse, you may only want to process new or updated data from the tables in your Script. These templates will help you set up a system for keeping track of what data has already been processed by the Script.
 
