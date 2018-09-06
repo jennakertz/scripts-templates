@@ -33,12 +33,11 @@ import logging
 logger = logging.getLogger()
 
 # dummy event variable
-event = json.loads('{"script_id": 123,"tables": {"schema_a": ["table_a","table_b"],"schema_b": ["table_a"],"schema_c": ["table_a"]}}')
+event = json.loads('{"script_id": 123,"tables": {"integration_a": ["table_a","table_b"],"integration_b": ["table_a"],"integration_c": ["table_a"]}}')
 
-# RUN THIS SCRIPT ONLY FOR THE FOLLOWING SCHEMAS AND TABLES
-# FILTER ANY ADDITIONAL TABLES FROM THE `event` VARIABLE OUT OF THE SCRIPT
+# run this script only for the following integrations and tables within them
 
-accepted_tables = json.loads('{"schema_a":["table_b"], "schema_c":["table_c"]}')
+accepted_tables = json.loads('{"integration_a":["table_b"], "integration_c":["table_c"]}')
 
 a = event['tables']
 b = accepted_tables
