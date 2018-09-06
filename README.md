@@ -17,7 +17,8 @@ Use the following templates to get started with Scripts.
 | [Enrich data and store results](https://github.com/jennakertz/scripts-templates/blob/master/get-results-and-store-in-table-snowflake.py) | Snowflake | Query your data warehouse to get a list of data you'd like to enrich. Use that data to query an API like Clearbit. Store the results returned from the API in a table in your destination. |
 | [Audit SFDC data's schema](https://github.com/jennakertz/scripts-templates/blob/master/audit-sfdc-fields-snowflake.py) | Snowflake | Compares an object's fields in SFDC to the columns for the object in the Snowflake data warehouse. If fields exist in SFDC but do not exist in the data warehouse, checks SFDC to see whether the missing fields contain data. If the missing fields contain data in SFDC, reports the problem fields along with record id examples for investigation. | 
 | [Send data to SFDC](https://github.com/jennakertz/scripts-templates/blob/master/send-data-from-postgres-to-sfdc.py) | Postgres | Create new contacts in Salesforce when new data is loaded into your warehouse. | 
-
+| [Trigger a Sinter job run](https://github.com/jennakertz/scripts-templates/blob/master/trigger-sinter.py) | any | Trigger a Sinter job to run. If your Script is scheduled to run after data loads into your warehouse, you can coordinate the Script's [accepted tables](#filtering-tables) with the `dbt` commands for the job you are running. | 
+| [Make an API request](https://github.com/jennakertz/scripts-templates/blob/master/trigger-sinter.py) | any | Use the `requests` library to interact with an API. This example uses the Sinter API. | 
 
 ## Post-load scheduling
 
